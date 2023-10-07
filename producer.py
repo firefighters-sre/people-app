@@ -36,6 +36,7 @@ def check_kafka_connection(p):
     return True
 
 def main():
+    print('Starting app...')
     p = Producer({'bootstrap.servers': kafka_servers})
 
     # Check connection to Kafka
@@ -46,6 +47,7 @@ def main():
     record_id = 1  # Initialize record_id
     while True:  # Infinite loop to keep sending messages every minute
         access_log_payload = create_access_log_payload(record_id)
+        print(f'paylod {access_log_payload}')
         p.produce(topic, value=access_log_payload, callback=on_delivery)
         p.flush()  # Wait for any outstanding messages to be delivered and delivery report callbacks to be triggered.
         time.sleep(60)  # Sleep for 60 seconds before sending the next message
