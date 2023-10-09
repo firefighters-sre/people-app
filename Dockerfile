@@ -1,17 +1,10 @@
-# Use an official Python runtime as a base image
-FROM python:3.8-slim-buster
-
-# Set the working directory in the container to /app
-WORKDIR /app
-
-# Copy the current directory contents into the container at /app
-COPY . /app/
-
-# Install any needed packages specified in requirements.txt
-RUN pip install --no-cache-dir -r requirements.txt
-
-# Make port 80 available to the world outside this container
-EXPOSE 80
-
-# Run producer.py when the container launches
-CMD ["python", "producer.py"]
+FROM registry.access.redhat.com/ubi8/ubi-minimal
+USER root
+LABEL maintainer="Gabriel Sampaio"
+# Update image
+RUN microdnf update -y && rm -rf /var/cache/yum
+RUN microdnf install curl -y && microdnf clean all
+# Start the service
+COPY people.sh people.sh
+COPY access.json access.json
+ENTRYPOINT ["./people.sh"]
